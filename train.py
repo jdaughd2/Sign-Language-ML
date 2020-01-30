@@ -10,6 +10,7 @@ import os
 def get_train():
     import random
 
+    print("Reading training data...")
     train = np.genfromtxt('./datasets/sign_mnist_train/sign_mnist_train.csv',delimiter=',')[1:]
 
     X_train = [[i[1:]] for i in train]
@@ -22,23 +23,6 @@ def get_train():
     y_train = np.asarray(y_train).reshape(-1)
 
     return X_train, y_train
-
-# Reads in test data, correctly shapes it, and shuffles it
-def get_test():
-    import random
-
-    test = np.genfromtxt('./datasets/sign_mnist_test/sign_mnist_test.csv',delimiter=',')[1:]
-
-    X_test = [[i[1:]] for i in test]
-    y_test = [i[:1] for i in test]
-    test_data = list(zip(X_test, y_test))
-
-    random.shuffle(test_data)
-    X_test, y_test = zip(*test_data)
-    X_test = np.asarray(X_test).reshape(-1, 28, 28, 1) / 255.0
-    y_test = np.asarray(y_test).reshape(-1)
-
-    return X_test, y_test
 
 if not os.path.exists("logs"):
     os.makedirs("logs")
@@ -72,9 +56,5 @@ model.compile(optimizer='adam',
              metrics=['accuracy'])
 
 model.fit(X_train, y_train, epochs=10, callbacks=[tensorboard])
-
-X_test, y_test = get_test()
-val_loss, val_accuracy = model.evaluate(X_test, y_test, callbacks=[tensorboard])
-print(f"val_loss: {val_loss}\tval_accuracy: {val_accuracy}")
 
 model.save("./models/signlanguage-cnn-64x2-{}.h5".format(int(time.time())))
