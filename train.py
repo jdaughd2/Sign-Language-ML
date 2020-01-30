@@ -28,6 +28,8 @@ if not os.path.exists("logs"):
     os.makedirs("logs")
 if not os.path.exists("models"):
     os.makedirs("models")
+if not os.path.exists("datasets/images"):
+    os.makedirs("datasets/images")
 
 NAME = f"sign-language-cnn-64x2-{int(time.time())}"
 tensorboard = TensorBoard(log_dir=f"./logs/{NAME}")

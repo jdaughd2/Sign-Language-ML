@@ -1,6 +1,9 @@
+datasets/images/*
+datasets/sign_test_*.csv
 logs/*
 models/*
 notebooks/
 tensorflow_env/
 *.h5
 .ipynb_checkpoints/
+
