@@ -4,6 +4,7 @@ from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten, Conv2D,
 from tensorflow.keras.callbacks import TensorBoard
 import time
 import numpy as np
+import os
 
 # Reads in training data, correctly shapes it, and shuffles it
 def get_train():
@@ -38,6 +39,11 @@ def get_test():
     y_test = np.asarray(y_test).reshape(-1)
 
     return X_test, y_test
+
+if not os.path.exists("logs"):
+    os.makedirs("logs")
+if not os.path.exists("models"):
+    os.makedirs("models")
 
 NAME = f"sign-language-cnn-64x2-{int(time.time())}"
 tensorboard = TensorBoard(log_dir=f"./logs/{NAME}")
