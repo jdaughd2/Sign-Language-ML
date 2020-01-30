@@ -5,13 +5,21 @@ from tensorflow.keras.callbacks import TensorBoard
 import time
 import numpy as np
 import os
+import argparse
+
+# Define command line arguments
+# Run "python test.py -h" for help
+parser = argparse.ArgumentParser()
+parser.add_argument("-f", "--file", help="specify test data", action="store", default="./datasets/sign_mnist_train.csv")
+parser.add_argument("-e", "--epoch", help="specify number of epochs", type=int, default=10)
+args = parser.parse_args()
 
 # Reads in training data, correctly shapes it, and shuffles it
-def get_train():
+def get_train(train_dir):
     import random
 
     print("Reading training data...")
-    train = np.genfromtxt('./datasets/sign_mnist_train/sign_mnist_train.csv',delimiter=',')[1:]
+    train = np.genfromtxt(train_dir,delimiter=',')[1:]
 
     X_train = [[i[1:]] for i in train]
     y_train = [i[:1] for i in train]
@@ -34,7 +42,7 @@ if not os.path.exists("datasets/images"):
 NAME = f"sign-language-cnn-64x2-{int(time.time())}"
 tensorboard = TensorBoard(log_dir=f"./logs/{NAME}")
 
-X_train, y_train = get_train()
+X_train, y_train = get_train(args.file)
 
 model = Sequential()
 model.add(Conv2D(64, (3,3), input_shape = X_train.shape[1:]))
@@ -57,6 +65,6 @@ model.compile(optimizer='adam',
              loss='sparse_categorical_crossentropy',
              metrics=['accuracy'])
 
-model.fit(X_train, y_train, epochs=10, callbacks=[tensorboard])
+model.fit(X_train, y_train, epochs=args.epoch, callbacks=[tensorboard])
 
-model.save("./models/signlanguage-cnn-64x2-{}.h5".format(int(time.time())))
+model.save(f"./models/{NAME}.h5")
